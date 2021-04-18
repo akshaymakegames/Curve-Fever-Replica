@@ -1,0 +1,47 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+[RequireComponent(typeof(LineRenderer))]
+[RequireComponent(typeof(EdgeCollider2D))]
+public class Tail : MonoBehaviour
+{
+    public float pointSpacing = .1f;
+    public Transform snake;
+    public List<Vector2> points;
+
+    LineRenderer line;
+    EdgeCollider2D col;
+    // Start is called before the first frame update
+    void Start()
+    {
+        line = GetComponent<LineRenderer>();
+        col = GetComponent<EdgeCollider2D>();
+        points = new List<Vector2>();
+        SetPoint();//// create first point
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Vector3.Distance(points.Last(), snake.position) > pointSpacing)
+        {
+            SetPoint();
+        }
+    }
+
+    private void SetPoint()
+    {
+        if (points.Count > 1)
+        {
+            col.points = points.ToArray<Vector2>();/// only add collder till seccond point so that it doesnot collide with the snake head on game start
+        }
+        points.Add(snake.position);
+        line.positionCount = points.Count;/////line.numPositon is depreceated
+        
+        line.SetPosition(points.Count - 1, snake.position);
+        
+
+    }
+}
